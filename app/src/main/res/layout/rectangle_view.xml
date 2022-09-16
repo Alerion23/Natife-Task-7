@@ -8,7 +8,7 @@
         android:layout_width="300dp"
         android:layout_height="200dp"
         app:rectangleColor="@android:color/holo_purple"
-        app:borderWidth="20dp"
+        app:borderWidth="10dp"
         app:cornerRadius="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"

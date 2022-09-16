@@ -1,10 +1,12 @@
 package com.example.natifetask7.custom
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import com.example.natifetask7.R
+import kotlin.math.min
 
 class Rectangle @JvmOverloads constructor(
     context: Context,
@@ -15,9 +17,23 @@ class Rectangle @JvmOverloads constructor(
     private var borderWidth = DEFAULT_BORDER_WIDTH
     private var rectangleColor = DEFAULT_RECTANGLE_COLOR
     private var cornerRadius = DEFAULT_CORNER_RADIUS
+    private var rect: RectF? = null
 
     init {
         setupAttributes(attrs)
+    }
+
+    @SuppressLint("DrawAllocation")
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+//        val size = min(measuredWidth, measuredHeight)
+//        setMeasuredDimension(size, size)
+        rect = RectF(
+            borderWidth / 2,
+            borderWidth / 2,
+            measuredWidth.toFloat() - borderWidth / 2,
+            measuredHeight.toFloat() - borderWidth / 2
+        )
     }
 
     private fun setupAttributes(attrs: AttributeSet?) {
@@ -32,6 +48,9 @@ class Rectangle @JvmOverloads constructor(
                 getDimension(R.styleable.Rectangle_cornerRadius, DEFAULT_CORNER_RADIUS)
         }
         typedArray.recycle()
+        paint.color = rectangleColor
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = borderWidth
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -43,21 +62,14 @@ class Rectangle @JvmOverloads constructor(
     }
 
     private fun drawRectangle(canvas: Canvas) {
-        val rect = RectF(
-            20f,
-            20f,
-            canvas.width.toFloat() - 20f,
-            canvas.height.toFloat() - 20f
-        )
-        paint.color = rectangleColor
-        paint.style = Paint.Style.STROKE
-        paint.strokeWidth = borderWidth
-        canvas.drawRoundRect(
-            rect,
-            cornerRadius,
-            cornerRadius,
-            paint
-        )
+        rect?.let {
+            canvas.drawRoundRect(
+                it,
+                cornerRadius,
+                cornerRadius,
+                paint
+            )
+        }
     }
 
     companion object {
